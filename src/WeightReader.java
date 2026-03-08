@@ -1,10 +1,14 @@
 import java.io.*;
+import java.time.ZonedDateTime;
+import java.util.function.Consumer;
 
 public class WeightReader implements Runnable {
     private final String fileName;
+    private Consumer<WeightData.WeightInfo> onWeightChange;
 
-    public WeightReader(String fileName) {
+    public WeightReader(String fileName, Consumer<WeightData.WeightInfo> onWeightChange) {
         this.fileName = fileName;
+        this.onWeightChange = onWeightChange;
     }
 
     @Override
@@ -12,9 +16,10 @@ public class WeightReader implements Runnable {
         try (BufferedReader bufferedReader = new BufferedReader((new FileReader(fileName)))) {
             String weight;
             while((weight = bufferedReader.readLine()) != null) {
-                System.out.println(weight);
+                Thread.sleep(1000);
+                onWeightChange.accept(new WeightData.WeightInfo(Double.parseDouble(weight), ZonedDateTime.now()));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
