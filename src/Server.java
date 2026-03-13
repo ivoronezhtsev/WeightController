@@ -13,7 +13,7 @@ public class Server {
         try {
             try(ServerSocket serverSocket = new ServerSocket(1024)) {
                 System.out.println("Start listening  " + serverSocket.getLocalPort());
-                while (true) {
+                while (!Thread.currentThread().isInterrupted()) {
                     Socket socket = serverSocket.accept();
                     System.out.println("New connection accepted");
                     Thread thread = new Thread(new Connection(socket.getOutputStream(), weightData));
