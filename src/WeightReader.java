@@ -1,5 +1,6 @@
 import java.io.*;
 import java.time.ZonedDateTime;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class WeightReader implements Runnable {
@@ -16,7 +17,7 @@ public class WeightReader implements Runnable {
         try (BufferedReader bufferedReader = new BufferedReader((new FileReader(fileName)))) {
             String weight;
             while ((weight = bufferedReader.readLine()) != null) {
-                Thread.sleep(1000);
+                TimeUnit.SECONDS.sleep(1);
                 try {
                     onWeightChange.accept(new WeightData.WeightInfo(Double.parseDouble(weight), ZonedDateTime.now()));
                 } catch (Exception exception) {
