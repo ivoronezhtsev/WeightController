@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 public class WeightReader implements Runnable {
     private final String fileName;
-    private Consumer<WeightData.WeightInfo> onWeightChange;
+    private final Consumer<WeightData.WeightInfo> onWeightChange;
 
     public WeightReader(String fileName, Consumer<WeightData.WeightInfo> onWeightChange) {
         this.fileName = fileName;
