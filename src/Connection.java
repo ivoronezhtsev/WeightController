@@ -1,4 +1,6 @@
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 public class Connection implements Runnable {
 
@@ -8,25 +10,24 @@ public class Connection implements Runnable {
     public Connection(OutputStream outputStream, WeightData weightData) {
         bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
         this.weightData = weightData;
+        weightData.addConsumer(this);
     }
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                bufferedWriter.write(weightData.getScales1().toString());
-                bufferedWriter.newLine();
-                bufferedWriter.write(weightData.getScales2().toString());
-                bufferedWriter.newLine();
-                bufferedWriter.write(weightData.getScales3().toString());
-                bufferedWriter.newLine();
-                bufferedWriter.write(weightData.getScales4().toString());
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            bufferedWriter.write(weightData.getScales1().toString());
+            bufferedWriter.newLine();
+            bufferedWriter.write(weightData.getScales2().toString());
+            bufferedWriter.newLine();
+            bufferedWriter.write(weightData.getScales3().toString());
+            bufferedWriter.newLine();
+            bufferedWriter.write(weightData.getScales4().toString());
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        } catch (Exception e) {
+            weightData.removeConsumer(this);
+            throw new RuntimeException(e);
         }
     }
 }

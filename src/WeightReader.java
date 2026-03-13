@@ -15,9 +15,13 @@ public class WeightReader implements Runnable {
     public void run() {
         try (BufferedReader bufferedReader = new BufferedReader((new FileReader(fileName)))) {
             String weight;
-            while((weight = bufferedReader.readLine()) != null) {
+            while ((weight = bufferedReader.readLine()) != null) {
                 Thread.sleep(1000);
-                onWeightChange.accept(new WeightData.WeightInfo(Double.parseDouble(weight), ZonedDateTime.now()));
+                try {
+                    onWeightChange.accept(new WeightData.WeightInfo(Double.parseDouble(weight), ZonedDateTime.now()));
+                } catch (Exception exception) {
+                    System.err.println("Ошибка при обработке данных о весе " + exception.getMessage());
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
